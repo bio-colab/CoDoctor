@@ -1,282 +1,737 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <base href="/" />
-  <meta charset="utf-8" />
-  <title>AI Medical Assistant Chat</title>
-  <script src="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"></script>
-  <script src="https://unpkg.com/@mui/material@latest/umd/material-ui.development.js"></script>
-  <script src="https://unpkg.com/@emotion/react@latest/umd/emotion-react.development.js"></script>
-  <script src="https://unpkg.com/@emotion/styled@latest/umd/emotion-styled.development.js"></script>
-  <script>
-    const { createTheme, ThemeProvider, CssBaseline } = MaterialUI;
-    const { styled } = window['@emotion/styled'];
-
-    const theme = createTheme({
-      palette: {
-        primary: {
-          main: '#808000',
-          light: '#60a5fa',
-          dark: '#2563eb',
-        },
-        secondary: {
-          main: '#800000',
-        },
-        background: {
-          default: '#ffffff',
-          paper: '#f8f9fa',
-        },
-        text: {
-          primary: '#333333',
-          secondary: '#8b0000',
-        },
-      },
-      typography: {
-        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-      },
-    });
-
-    const GlassEffect = styled('div')({
-      background: 'rgba(255, 255, 255, 0.7)',
-      backdropFilter: 'blur(8px)',
-      WebkitBackdropFilter: 'blur(8px)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
-      borderRadius: '16px',
-      padding: '16px',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    });
-
-    const DarkGlassEffect = styled('div')({
-      background: 'rgba(17, 25, 40, 0.75)',
-      border: '1px solid rgba(255, 255, 255, 0.125)',
-      borderRadius: '16px',
-      padding: '16px',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    });
-  </script>
-  <style>
-    :root[data-theme="light"] {
-      --bg-gradient: linear-gradient(120deg, #ffffff 0%, #f8f9fa 100%);
-    }
-    :root[data-theme="dark"] {
-      --bg-gradient: linear-gradient(120deg, #1a202c 0%, #2d3748 100%);
-    }
-    body {
-      background: var(--bg-gradient);
-      min-height: 100vh;
-    }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
-  <script type="module">
-    import React from 'https://esm.sh/react';
-    import ReactDOM from 'https://esm.sh/react-dom';
-    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-    import {
-      Container,
-      Box,
-      Typography,
-      Button,
-      TextField,
-      Menu,
-      MenuItem,
-      IconButton,
-      CircularProgress,
-      Paper,
-    } from 'https://esm.sh/@mui/material';
-
-    const API_KEY = "AIzaSyDABDttadOaIAwxmVj0nCjkkHArzxPIt84";
-    const genAI = new GoogleGenerativeAI(API_KEY);
-
-    const translations = {
-      en: {
-        title: "AI Medical Assistant",
-        description: "I'm your AI Medical Assistant, designed to help you understand your symptoms and provide preliminary medical guidance. Please note that I'm not a replacement for professional medical care - always consult a healthcare provider for serious concerns.",
-        newChat: "New Chat",
-        send: "Send",
-        inputPlaceholder: "Describe your symptoms here... (Press Enter to send)",
-        welcome: "Hello! I'm your AI Medical Assistant. I'm here to help you understand your symptoms and provide preliminary guidance. Please note that I'm not a replacement for professional medical care. How can I help you today?"
-      },
-      ar: {
-        title: "المساعد الطبي الذكي",
-        description: "أنا مساعدك الطبي الذكي، مصمم لمساعدتك على فهم أعراضك وتقديم التوجيه الطبي الأولي. يرجى ملاحظة أنني لست بديلاً عن الرعاية الطبية المهنية - استشر دائماً مقدم الرعاية الصحية للمخاوف الجدية.",
-        newChat: "محادثة جديدة",
-        send: "إرسال",
-        inputPlaceholder: "صف أعراضك هنا... (اضغط Enter للإرسال)",
-        welcome: "مرحباً! أنا مساعدك الطبي الذكي. أنا هنا لمساعدتك على فهم أعراضك وتقديم التوجيه الأولي. يرجى ملاحظة أنني لست بديلاً عن الرعاية الطبية المهنية. كيف يمكنني مساعدتك اليوم؟"
-      }
-    };
-
-    const App = () => {
-      const [chatHistory, setChatHistory] = React.useState([]);
-      const [currentLanguage, setCurrentLanguage] = React.useState(localStorage.getItem('language') || 'en');
-      const [anchorEl, setAnchorEl] = React.useState(null);
-      const [loading, setLoading] = React.useState(false);
-
-      const handleLanguageChange = (lang) => {
-        setCurrentLanguage(lang);
-        localStorage.setItem('language', lang);
-      };
-
-      const handleLanguageMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-      };
-
-      const handleLanguageMenuClose = () => {
-        setAnchorEl(null);
-      };
-
-      const handleNewChat = () => {
-        setChatHistory([]);
-        localStorage.removeItem('chatHistory');
-      };
-
-      const handleSendMessage = async () => {
-        const userInput = document.getElementById('userInput').value.trim();
-        if (!userInput) return;
-
-        setLoading(true);
-        setChatHistory([...chatHistory, { role: 'user', content: userInput }]);
-        document.getElementById('userInput').value = '';
-
-        const historyContext = chatHistory.slice(-6).map(msg => msg.content).join('\n');
-        const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-        const prompt = `${SYSTEM_PROMPT}\n\nPrevious conversation:\n${historyContext}\n\nUser: ${userInput}\nAI Medical Assistant:`;
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-
-        setChatHistory([...chatHistory, { role: 'assistant', content: text }]);
-        setLoading(false);
-      };
-
-      const SYSTEM_PROMPT = `You are an AI Illness Diagnosis Agent designed to assist individuals in diagnosing potential medical conditions. Follow this workflow:
-    1. Start with a greeting and introduction
-    2. Collect current health status (symptoms, duration, severity, medications)
-    3. Gather medical history (pre-existing conditions, surgeries, allergies, family history)
-    4. Analyze the information provided
-    5. Provide a preliminary diagnosis with reasoning
-    6. Recommend next steps
-    7. Offer follow-up and gather feedback
-    Remember to always include a medical disclaimer and encourage users to seek professional medical help for serious conditions.`;
-
-      React.useEffect(() => {
-        const savedHistory = localStorage.getItem('chatHistory');
-        if (savedHistory) {
-          setChatHistory(JSON.parse(savedHistory));
-        } else {
-          setChatHistory([{ role: 'assistant', content: translations[currentLanguage].welcome }]);
+    <html lang="ar" dir="rtl">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>جدول المحاضرات</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+      <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                'lecture-primary': 'rgba(74, 144, 226, 0.7)',
+                'lecture-secondary': 'rgba(95, 204, 163, 0.7)',
+                'lecture-background': 'rgba(244, 247, 250, 0.7)',
+                'lecture-accent': 'rgba(255, 107, 107, 0.7)'
+              }
+            }
+          }
         }
-      }, [currentLanguage]);
+      </script>
+      <style>
+        .progress-bar {
+          transition: width 0.5s ease-in-out;
+        }
+        .glass-effect {
+          backdrop-filter: blur(10px);
+          background-color: rgba(255, 255, 255, 0.1);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          border-radius: 10px;
+        }
+        .hover-effect:hover {
+          transform: scale(1.05);
+          transition: transform 0.3s ease-in-out;
+        }
+        .animated-entrance {
+          animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      </style>
+    </head>
+    <body class="bg-lecture-background min-h-screen p-4 font-arabic">
+      <div class="container mx-auto bg-white shadow-xl rounded-2xl p-6 glass-effect animated-entrance">
+        <h1 class="text-3xl font-bold text-center mb-8 text-lecture-primary">
+          <i class="bi bi-calendar-week ml-3"></i>جدول المحاضرات الأسبوعي
+        </h1>
 
-      return (
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Container maxWidth="md" sx={{ p: 4 }}>
-            <Paper elevation={3} sx={{ p: 3, borderRadius: 4 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                <Typography variant="h4" component="h1" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <i className="ri-heart-pulse-fill" style={{ fontSize: '2rem' }}></i>
-                  <span>{translations[currentLanguage].title}</span>
-                </Typography>
-                <Box display="flex" alignItems="center" gap={2}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<i className="ri-global-line"></i>}
-                    onClick={handleLanguageMenuOpen}
-                  >
-                    {translations[currentLanguage].languageBtn}
-                  </Button>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleLanguageMenuClose}
-                  >
-                    <MenuItem onClick={() => handleLanguageChange('en')}>English</MenuItem>
-                    <MenuItem onClick={() => handleLanguageChange('ar')}>عربي</MenuItem>
-                  </Menu>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<i className="ri-add-line"></i>}
-                    onClick={handleNewChat}
-                  >
-                    {translations[currentLanguage].newChat}
-                  </Button>
-                  <IconButton onClick={() => document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light')}>
-                    {document.documentElement.getAttribute('data-theme') === 'light' ? <i className="ri-sun-line"></i> : <i className="ri-moon-line"></i>}
-                  </IconButton>
-                </Box>
-              </Box>
-              <Typography variant="body1" sx={{ mb: 4 }}>
-                {translations[currentLanguage].description}
-              </Typography>
-              <Paper elevation={3} sx={{ p: 2, borderRadius: 2, mb: 2, maxHeight: '500px', overflowY: 'auto' }}>
-                {chatHistory.map((msg, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      p: 2,
-                      mb: 2,
-                      borderRadius: 2,
-                      backgroundColor: msg.role === 'user' ? 'primary.main' : 'background.paper',
-                      color: msg.role === 'user' ? 'white' : 'text.primary',
-                      alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                    }}
-                  >
-                    {msg.content}
-                  </Box>
-                ))}
-              </Paper>
-              <Box display="flex" gap={2}>
-                <TextField
-                  id="userInput"
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={3}
-                  placeholder={translations[currentLanguage].inputPlaceholder}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  endIcon={<i className="ri-send-plane-fill"></i>}
-                  onClick={handleSendMessage}
-                >
-                  {translations[currentLanguage].send}
-                </Button>
-              </Box>
-              {loading && (
-                <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-                  <CircularProgress />
-                </Box>
-              )}
-              <Box textAlign="center" mt={2}>
-                <a
-                  href="https://t.me/eylia5"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <i className="ri-telegram-fill" style={{ fontSize: '1.5rem', verticalAlign: 'middle' }}></i>
-                  <span style={{ verticalAlign: 'middle', marginLeft: '8px' }}>{translations[currentLanguage].contact}</span>
-                </a>
-              </Box>
-            </Paper>
-          </Container>
-        </ThemeProvider>
-      );
-    };
+        <div id="lecture-schedule" class="space-y-6">
 
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
-</body>
-</html>
+            <div class="bg-lecture-primary/10 rounded-lg p-4 glass-effect hover-effect">
+              <h2 class="text-2xl font-bold text-lecture-primary mb-4 border-b pb-2" data-day="الأحد">
+                <i class="bi bi-calendar-day ml-2"></i>الأحد
+              </h2>
+              <div class="space-y-4">
+
+      <div
+        data-time="9:00-9:45"
+        class="mb-2 p-4 rounded-lg bg-blue-100 text-blue-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">Headway Beginners</h3>
+            <p class="text-sm text-gray-700">م.م علي خلف عبدالله</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            9:00 -
+            9:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="10:00-10:45"
+        class="mb-2 p-4 rounded-lg bg-green-100 text-green-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">تاريخ العلاقات الدولية</h3>
+            <p class="text-sm text-gray-700">أ.م.د. عبدالغني محمد عبدالعزيز</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            10:00 -
+            10:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="11:00-11:45"
+        class="mb-2 p-4 rounded-lg bg-red-100 text-red-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">الأنظمة السياسية والدستورية المقارنة</h3>
+            <p class="text-sm text-gray-700">أ.د. محمد شطب</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            11:00 -
+            11:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="12:00-12:45"
+        class="mb-2 p-4 rounded-lg bg-purple-100 text-purple-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">المدخل لدراسة القانون</h3>
+            <p class="text-sm text-gray-700">أ.م. رياض ناظم</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            12:00 -
+            12:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+              </div>
+            </div>
+
+            <div class="bg-lecture-primary/10 rounded-lg p-4 glass-effect hover-effect">
+              <h2 class="text-2xl font-bold text-lecture-primary mb-4 border-b pb-2" data-day="الاثنين">
+                <i class="bi bi-calendar-day ml-2"></i>الاثنين
+              </h2>
+              <div class="space-y-4">
+
+      <div
+        data-time="9:00-9:45"
+        class="mb-2 p-4 rounded-lg bg-blue-100 text-blue-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">اللغة العربية</h3>
+            <p class="text-sm text-gray-700">م.د. ضياء حامد حمود</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            9:00 -
+            9:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="10:00-10:45"
+        class="mb-2 p-4 rounded-lg bg-green-100 text-green-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">حقوق الانسان</h3>
+            <p class="text-sm text-gray-700">م.م. زينب غالب</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            10:00 -
+            10:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="11:00-11:45"
+        class="mb-2 p-4 rounded-lg bg-red-100 text-red-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">مدخل علم الاقتصاد</h3>
+            <p class="text-sm text-gray-700">م. هاشم راشد عجرش</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            11:00 -
+            11:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="12:00-12:45"
+        class="mb-2 p-4 rounded-lg bg-purple-100 text-purple-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">Introduction to Political Science</h3>
+            <p class="text-sm text-gray-700">م.م. مخلد ماجد احمد</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            12:00 -
+            12:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+              </div>
+            </div>
+
+            <div class="bg-lecture-primary/10 rounded-lg p-4 glass-effect hover-effect">
+              <h2 class="text-2xl font-bold text-lecture-primary mb-4 border-b pb-2" data-day="الثلاثاء">
+                <i class="bi bi-calendar-day ml-2"></i>الثلاثاء
+              </h2>
+              <div class="space-y-4">
+
+      <div
+        data-time="9:00-9:45"
+        class="mb-2 p-4 rounded-lg bg-blue-100 text-blue-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">الأنظمة السياسية والدستورية المقارنة</h3>
+            <p class="text-sm text-gray-700">أ.د. محمد شطب</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            9:00 -
+            9:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="10:00-10:45"
+        class="mb-2 p-4 rounded-lg bg-green-100 text-green-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">تاريخ العلاقات الدولية</h3>
+            <p class="text-sm text-gray-700">أ.م.د. عبدالغني محمد عبدالعزيز</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            10:00 -
+            10:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="11:00-11:45"
+        class="mb-2 p-4 rounded-lg bg-red-100 text-red-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">المدخل لدراسة القانون</h3>
+            <p class="text-sm text-gray-700">أ.م. رياض ناظم</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            11:00 -
+            11:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="12:00-12:45"
+        class="mb-2 p-4 rounded-lg bg-purple-100 text-purple-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">المدخل الى علم السياسة</h3>
+            <p class="text-sm text-gray-700">م.د. عباس فاضل علوان</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            12:00 -
+            12:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+              </div>
+            </div>
+
+            <div class="bg-lecture-primary/10 rounded-lg p-4 glass-effect hover-effect">
+              <h2 class="text-2xl font-bold text-lecture-primary mb-4 border-b pb-2" data-day="الأربعاء">
+                <i class="bi bi-calendar-day ml-2"></i>الأربعاء
+              </h2>
+              <div class="space-y-4">
+
+      <div
+        data-time="9:00-9:45"
+        class="mb-2 p-4 rounded-lg bg-blue-100 text-blue-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">المدخل الى علم السياسة</h3>
+            <p class="text-sm text-gray-700">م.د. عباس فاضل علوان</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            9:00 -
+            9:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="10:00-10:45"
+        class="mb-2 p-4 rounded-lg bg-green-100 text-green-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">حقوق الانسان</h3>
+            <p class="text-sm text-gray-700">م.م. زينب غالب</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            10:00 -
+            10:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="11:00-11:45"
+        class="mb-2 p-4 rounded-lg bg-red-100 text-red-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">الأنظمة السياسية والدستورية المقارنة</h3>
+            <p class="text-sm text-gray-700">أ.د. محمد شطب</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            11:00 -
+            11:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="12:00-12:45"
+        class="mb-2 p-4 rounded-lg bg-purple-100 text-purple-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">Introduction to Political Science</h3>
+            <p class="text-sm text-gray-700">م.م. مخلد ماجد احمد</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            12:00 -
+            12:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+              </div>
+            </div>
+
+            <div class="bg-lecture-primary/10 rounded-lg p-4 glass-effect hover-effect">
+              <h2 class="text-2xl font-bold text-lecture-primary mb-4 border-b pb-2" data-day="الخميس">
+                <i class="bi bi-calendar-day ml-2"></i>الخميس
+              </h2>
+              <div class="space-y-4">
+
+      <div
+        data-time="9:00-9:45"
+        class="mb-2 p-4 rounded-lg bg-blue-100 text-blue-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">مدخل علم الاقتصاد</h3>
+            <p class="text-sm text-gray-700">م. هاشم راشد عجرش</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            9:00 -
+            9:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="10:00-10:45"
+        class="mb-2 p-4 rounded-lg bg-green-100 text-green-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">المدخل الى علم السياسة</h3>
+            <p class="text-sm text-gray-700">م.د. عباس فاضل علوان</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            10:00 -
+            10:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+      <div
+        data-time="11:00-11:45"
+        class="mb-2 p-4 rounded-lg bg-red-100 text-red-800 relative shadow-sm glass-effect hover-effect"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-bold text-lg">اساسيات الحاسوب</h3>
+            <p class="text-sm text-gray-700">م.م. ليث رافع</p>
+          </div>
+          <i class="bi bi-book text-2xl opacity-50"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">
+            11:00 -
+            11:45
+          </span>
+          <span class="lecture-status text-xs font-bold"></span>
+        </div>
+
+        <div class="mt-2 bg-white/30 rounded-full h-2 overflow-hidden">
+          <div class="progress-bar bg-lecture-primary h-full" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-2 text-left">
+          <span class="remaining-time text-xs text-gray-700"></span>
+        </div>
+      </div>
+
+              </div>
+            </div>
+
+        </div>
+
+        <div class="mt-8 bg-lecture-secondary/10 p-4 rounded-lg text-center glass-effect hover-effect">
+          <p class="text-lecture-secondary font-semibold">
+            <i class="bi bi-info-circle ml-2"></i>
+            مدة كل محاضرة 45 دقيقة مع استراحة 15 دقيقة بين المحاضرات
+          </p>
+        </div>
+      </div>
+
+      <script>
+        function formatTime(minutes, seconds) {
+          return minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+        }
+
+        function generateLectureStatus() {
+          const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+          const now = new Date();
+          const currentDay = days[now.getDay() - 0]; // 0 is Sunday in JavaScript
+
+
+          const currentDayElement = Array.from(document.querySelectorAll('h2[data-day]'))
+            .find(el => el.getAttribute('data-day') === currentDay);
+
+          if (currentDayElement) {
+            const lectures = currentDayElement.parentElement.querySelectorAll('[data-time]');
+            Array.from(lectures).forEach((lectureEl) => {
+              const [startTime, endTime] = lectureEl.getAttribute('data-time').split('-');
+              const [startHour, startMinute] = startTime.split(':').map(Number);
+              const [endHour, endMinute] = endTime.split(':').map(Number);
+
+              const lectureStart = new Date();
+              lectureStart.setHours(startHour, startMinute, 0);
+              const lectureEnd = new Date();
+              lectureEnd.setHours(endHour, endMinute, 0);
+
+              const statusSpan = lectureEl.querySelector('.lecture-status');
+              const progressBar = lectureEl.querySelector('.progress-bar');
+              const remainingTimeSpan = lectureEl.querySelector('.remaining-time');
+
+              // Reset previous state
+              lectureEl.classList.remove('border-4', 'border-green-500');
+              statusSpan.textContent = '';
+              progressBar.style.width = '0%';
+              remainingTimeSpan.textContent = '';
+
+              if (now >= lectureStart && now <= lectureEnd) {
+                // Lecture is ongoing
+                lectureEl.classList.add('border-4', 'border-green-500');
+                statusSpan.textContent = 'جارية الآن';
+
+                // Calculate progress and remaining time
+                const totalLectureDuration = 45 * 60 * 1000; // 45 minutes in milliseconds
+                const elapsedTime = now - lectureStart;
+                const remainingTime = lectureEnd - now;
+
+                const progressPercentage = (elapsedTime / totalLectureDuration) * 100;
+                progressBar.style.width = Math.min(progressPercentage, 100) + '%';
+
+                const remainingMinutes = Math.floor(remainingTime / (1000 * 60));
+                const remainingSeconds = Math.floor((remainingTime / 1000) % 60);
+                remainingTimeSpan.textContent = 'متبقي: ' + formatTime(remainingMinutes, remainingSeconds);
+              } else if (now < lectureStart) {
+                // Lecture hasn't started
+                statusSpan.textContent = 'لم تبدأ بعد';
+                const minutesUntilStart = Math.ceil((lectureStart - now) / (1000 * 60));
+                remainingTimeSpan.textContent = 'يبدأ بعد: ' + minutesUntilStart + ' دقيقة';
+              } else {
+                // Lecture has ended
+                statusSpan.textContent = 'انتهت';
+              }
+            });
+          }
+        }
+
+        generateLectureStatus();
+        setInterval(generateLectureStatus, 1000); // Update every second for more precise timing
+      </script>
+    </body>
+    </ht<canvaentity/>
+
+</user_highlights>
