@@ -7,8 +7,16 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        @font-face {
+            font-family: 'Al Jazeera';
+            src: url('https://db.onlinewebfonts.com/c/b86c0f3afb7b6eb1952be1d4c753140c?family=Al-Jazeera-Arabic-Regular') format('woff2'), /* استبدل برابط الخط الفعلي */
+                 url('https://db.onlinewebfonts.com/c/b86c0f3afb7b6eb1952be1d4c753140c?family=Al-Jazeera-Arabic-Regular') format('woff'); /* استبدل برابط الخط الفعلي */
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
-            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: 'Al Jazeera', sans-serif; /* استخدام خط الجزيرة */
             background: #f8f8f8;
             color: #1d1d1f;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -66,25 +74,7 @@
             background-color: #f5f5f5;
             cursor: pointer;
         }
-        .apple-search-bar {
-            margin-bottom: 20px;
-        }
-        .apple-search-bar input {
-            border-radius: 25px;
-            padding: 12px;
-            width: 100%;
-            border: 1px solid #e2e2e2;
-            background: #ffffff;
-            color: #1d1d1f;
-            transition: border-color 0.3s ease;
-        }
-        .apple-search-bar input:focus {
-            border-color: #007aff;
-            outline: none;
-        }
-        .apple-search-bar input::placeholder {
-            color: #8e8e93;
-        }
+        
         .apple-details-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
@@ -122,54 +112,20 @@
         body.theme-default .apple-neon-text { color: #406D96; }
         body.theme-default .apple-button { background: #406D96; }
 
-        /* Theme Styles - Red */
-        body.theme-red { background: #fddddd; }
-        body.theme-red .apple-neon-text { color: #E2474B; }
-        body.theme-red .apple-button { background: #E2474B; }
-
-        /* Theme Styles - Dark Blue */
-        body.theme-darkblue { background: #e6eaf0; }
-        body.theme-darkblue .apple-neon-text { color: #2F3A56; }
-        body.theme-darkblue .apple-button { background: #2F3A56; }
-
-        /* Theme Styles - Medium Blue */
-        body.theme-mediumblue { background: #edf2f7; }
-        body.theme-mediumblue .apple-neon-text { color: #406D96; }
-        body.theme-mediumblue .apple-button { background: #406D96; }
-
-        /* Theme Styles - Very Light Blue */
-        body.theme-verylightblue { background: #f8f9fa; }
-        body.theme-verylightblue .apple-neon-text { color: #A8D0DA; }
-        body.theme-verylightblue .apple-button { background: #A8D0DA; }
     </style>
 </head>
 <body class="bg-gray-100 p-4 theme-default">
     <div class="container mx-auto apple-card">
         <h1 class="text-center apple-neon-text">جدول المحاضرات - علوم سياسية - م 1</h1>
-        
-           <div class="mb-4 text-center">  <!-- Center the theme selector -->
-            <label for="themeSelector" class="mr-2">اختر ثيم:</label>
-            <select id="themeSelector" onchange="changeTheme(this.value)">
-                <option value="default">افتراضي (ازرق فاتح)</option>
-                <option value="red">أحمر</option>
-                <option value="darkblue">ازرق غامق</option>
-                <option value="mediumblue">ازرق متوسط</option>
-                <option value="verylightblue">ازرق فاتح جدا</option>
-            </select>
-        </div>
-
-        <div class="apple-search-bar">
-            <input type="text" id="search" placeholder="ابحث في الجدول...">
-        </div>
 
         <div class="table-container">
-            <table class="apple-table w-full"> <!-- Ensure table takes full width -->
+            <table class="apple-table w-full">
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">اليوم</th>
-                        <th onclick="sortTable(1)">التوقيت</th>
-                        <th onclick="sortTable(2)">اسم المادة</th>
-                        <th onclick="sortTable(3)">اسم المحاضر</th>
+                        <th>اليوم</th>
+                        <th>التوقيت</th>
+                        <th>اسم المادة</th>
+                        <th>اسم المحاضر</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,7 +177,7 @@
                         <td>Introduction to Political Science</td>
                         <td>م.م. ماجد أحمد</td>
                     </tr>
-                    <tr onclick="showDetails('الأنظمة السياسية والدستورية المقارنة', 'أ.د. محمد شطب')">
+                                       <tr onclick="showDetails('الأنظمة السياسية والدستورية المقارنة', 'أ.د. محمد شطب')">
                         <td>الثلاثاء</td>
                         <td>9:00-9:45</td>
                         <td>الأنظمة السياسية والدستورية المقارنة</td>
@@ -293,15 +249,6 @@
 
         <div id="details" class="mt-4 p-4 apple-details-container hidden">
             <h2 class="text-xl font-bold mb-2" id="lecture-title"></h2>
-            <!-- ... (Details content) ... -->
-            <div class="mt-4 flex justify-center"> <!-- Center buttons -->
-                <button class="apple-button mr-2" onclick="addToCalendar()">
-                    <i class="fas fa-calendar-plus"></i> إضافة إلى التقويم
-                </button>
-                <button class="apple-button" onclick="downloadFile()">
-                    <i class="fas fa-download"></i> تحميل الملفات
-                </button>
-            </div>
         </div>
 
         <div class="mt-4 text-center">
@@ -311,18 +258,15 @@
         </div>
     </div>
 
-
     <script>
-        // Theme switching logic
-        function changeTheme(theme) {
-            document.body.className = `bg-gray-100 p-4 theme-${theme}`;
-        }
+        function showDetails(lectureTitle, lecturerName) {
+            const detailsDiv = document.getElementById('details');
+            const titleHeader = document.getElementById('lecture-title');
 
-        // Sorting table logic
-        function sortTable(n) { /* ... */ }
-        
-        // ... other JavaScript functions ...
+            titleHeader.textContent = lectureTitle;
+            detailsDiv.classList.remove('hidden'); 
+        }
     </script>
 
 </body>
-</html>
+</html> 
