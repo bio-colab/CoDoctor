@@ -7,96 +7,108 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #000000, #1a1a1a);
-            color: #ffffff;
+            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #f8f8f8; /* Lighter background similar to Apple's design */
+            color: #1d1d1f; /* Dark text similar to Apple's design */
         }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            transition: transform 0.3s ease;
         }
-        .glass-effect:hover {
-            transform: translateY(-10px);
+        .apple-card {
+            background: rgba(255, 255, 255, 0.95); /* Slightly more opaque background for better readability */
+            border-radius: 15px; /* Softer corners */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+            backdrop-filter: blur(20px); /* Increased blur for stronger glass effect */
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(242, 242, 247, 0.6); /* Lighter border */
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
         }
-        .neon-text {
-            color: #00ffff;
-            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff, 0 0 20px #00ffffff, 0 0 30px #00ffff, 0 0 40px #00ffff, 0 0 50px #00ffff, 0 0 60px #00ffff;
+        .apple-card:hover {
+            transform: translateY(-5px); /* Less pronounced hover effect */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow on hover */
+        }
+        .apple-neon-text {
+            color: #007aff;
+            font-weight: 600; /* Semibold for better text rendering */
         }
         .table-container {
             overflow-x: auto;
         }
-        .table {
+        .apple-table {
             width: 100%;
             border-collapse: collapse;
             border-radius: 15px;
             overflow: hidden;
         }
-        .table th, .table td {
-            border: 1px solid #ddd;
-            padding: 12px;
+        .apple-table th, .apple-table td {
+            border: 1px solid #f0f0f0; /* Lighter border for the table cells */
+            padding: 15px;
             text-align: center;
         }
-        .table th {
-            background-color: rgba(255, 255, 255, 0.1);
+        .apple-table th {
+            background-color: #f8f8f8; /* Consistent with background */
+            font-weight: 600; /* Semibold headers */
         }
-        .table tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.05);
+        .apple-table tr:nth-child(even) {
+            background-color: #fafafa; /* Very subtle striping */
         }
-        .table tr:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .apple-table tr:hover {
+            background-color: #f5f5f5; /* Subtle highlight on hover */
         }
-        .search-bar {
+        .apple-search-bar {
             margin-bottom: 20px;
         }
-        .search-bar input {
-            border-radius: 20px;
-            padding: 10px;
+        .apple-search-bar input {
+            border-radius: 25px; /* More rounded search bar */
+            padding: 12px;
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            border: 1px solid #e2e2e2; /* Subtle border */
+            background: #ffffff; /* White background for search bar */
+            color: #1d1d1f;
         }
-        .search-bar input::placeholder {
-            color: #ffffff;
+        .apple-search-bar input::placeholder {
+            color: #8e8e93; /* Lighter placeholder color */
         }
-        .details-container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+        .apple-details-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
             padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease;
+            border: 1px solid #f0f0f0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .details-container:hover {
-            transform: translateY(-10px);
+        .apple-details-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
-        .button {
-            background: linear-gradient(135deg, #00ffff, #00bcd4);
+        .apple-button {
+            background: #007aff; /* Apple blue */
             border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
+            border-radius: 25px;
+            padding: 12px 25px;
             color: #ffffff;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
         }
-        .button:hover {
-            background: linear-gradient(135deg, #00bcd4, #00ffff);
+        .apple-button:hover {
+            background: #005bb5; /* Slightly darker blue on hover */
+            transform: scale(1.05); /* Slight zoom effect on hover */
+            box-shadow: 0 6px 12px rgba(0, 122, 255, 0.4);
         }
     </style>
 </head>
 <body class="bg-gray-100 p-4">
-    <div class="container mx-auto glass-effect">
-        <h1 class="text-2xl font-bold mb-4 text-center neon-text">جدول المحاضرات</h1>
-        <div class="search-bar">
+    <div class="container mx-auto apple-card">
+        <h1 class="text-2xl font-bold mb-4 text-center apple-neon-text">جدول المحاضرات</h1>
+        <div class="apple-search-bar">
             <input type="text" id="search" placeholder="ابحث في الجدول...">
         </div>
         <div class="table-container">
-            <table class="table">
+            <table class="apple-table">
                 <thead>
                     <tr>
                         <th onclick="sortTable(0)">اليوم</th>
@@ -154,7 +166,7 @@
                         <td>Introduction to Political Science</td>
                         <td>م.م. ماجد أحمد</td>
                     </tr>
-                    <tr onclick="showDetails('الأنظمة السياسية والدستورية المقارنة', 'أ.د. محمد شطب')">
+                                        <tr onclick="showDetails('الأنظمة السياسية والدستورية المقارنة', 'أ.د. محمد شطب')">
                         <td>الثلاثاء</td>
                         <td>8:30-10:30</td>
                         <td>الأنظمة السياسية والدستورية المقارنة</td>
@@ -223,23 +235,23 @@
                 </tbody>
             </table>
         </div>
-        <div id="details" class="mt-4 p-4 details-container hidden">
+        <div id="details" class="mt-4 p-4 apple-details-container hidden">
             <h2 class="text-xl font-bold mb-2" id="lecture-title"></h2>
             <p class="mb-2" id="lecture-description"></p>
             <p class="mb-2" id="lecture-content"></p>
             <p class="mb-2" id="additional-references"></p>
             <div class="mt-4">
-                <button class="button" onclick="addToCalendar()">إضافة إلى التقويم</button>
-                <button class="button ml-2" onclick="downloadFile()">تحميل الملفات</button>
+                <button class="apple-button" onclick="addToCalendar()">إضافة إلى التقويم</button>
+                <button class="apple-button ml-2" onclick="downloadFile()">تحميل الملفات</button>
             </div>
         </div>
         <div class="mt-4 text-center">
-            <button class="button" onclick="window.print()">طباعة الجدول</button>
+            <button class="apple-button" onclick="window.print()">طباعة الجدول</button>
         </div>
     </div>
     <script>
         function sortTable(n) {
-            const table = document.querySelector(".table");
+            const table = document.querySelector(".apple-table");
             let rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
             switching = true;
             dir = "asc";
@@ -275,32 +287,10 @@
             }
         }
 
-        function showDetails(subject, lecturer) {
-            const details = document.getElementById("details");
-            const lectureTitle = document.getElementById("lecture-title");
-            const lectureDescription = document.getElementById("lecture-description");
-            const lectureContent = document.getElementById("lecture-content");
-            const additionalReferences = document.getElementById("additional-references");
-
-            lectureTitle.textContent = subject;
-            lectureDescription.textContent = `المحاضر: ${lecturer}`;
-            lectureContent.textContent = "محتوى المحاضرة: سيتم إضافة محتوى المحاضرة هنا.";
-            additionalReferences.textContent = "مراجع إضافية: سيتم إضافة المراجع الإضافية هنا.";
-
-            details.classList.remove("hidden");
-        }
-
-        function addToCalendar() {
-            alert("إضافة إلى التقويم سيتم تنفيذه قريباً.");
-        }
-
-        function downloadFile() {
-            alert("تحميل الملفات سيتم تنفيذه قريباً.");
-        }
 
         document.getElementById('search').addEventListener('keyup', function() {
             const filter = this.value.toLowerCase();
-            const rows = document.querySelectorAll(".table tbody tr");
+            const rows = document.querySelectorAll(".apple-table tbody tr");
             rows.forEach(row => {
                 row.style.display = row.innerText.toLowerCase().includes(filter) ? '' : 'none';
             });
