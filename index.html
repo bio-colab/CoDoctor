@@ -1,272 +1,257 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جدول المحاضرات-علوم سياسية - م1</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>جدول المحاضرات - علوم سياسية</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'Al Jazeera';
-            src: url('https://db.onlinewebfonts.com/c/b86c0f3afb7b6eb1952be1d4c753140c?family=Al-Jazeera-Arabic-Regular') format('woff2'), /* استبدل برابط الخط الفعلي */
-                 url('https://db.onlinewebfonts.com/c/b86c0f3afb7b6eb1952be1d4c753140c?family=Al-Jazeera-Arabic-Regular') format('woff'); /* استبدل برابط الخط الفعلي */
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        body {
-            font-family: 'Al Jazeera', sans-serif; /* استخدام خط الجزيرة */
-            background: #f8f8f8;
-            color: #1d1d1f;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .apple-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(242, 242, 247, 0.6);
-            padding: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .apple-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        .apple-neon-text {
-            font-weight: 600;
-            transition: color 0.3s ease;
-            font-size: 2em; /* Larger font size for title */
-            margin-bottom: 0.5em;
-        }
-        .table-container {
-            overflow-x: auto;
-        }
-        .apple-table {
-            width: 100%;
-            border-collapse: collapse;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-        .apple-table th, .apple-table td {
-            border: 1px solid #f0f0f0;
-            padding: 15px;
-            text-align: center;
-            transition: background-color 0.3s ease;
-        }
-        .apple-table th {
-            background-color: #f0f0f0;
-            font-weight: 600;
-            position: sticky; top: 0; /* Makes the header stick */
-            z-index: 2;
-        }
-        .apple-table tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-        .apple-table tr:hover {
-            background-color: #f5f5f5;
-            cursor: pointer;
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        * {
+            font-family: 'Tajawal', sans-serif;
         }
         
-        .apple-details-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid #f0f0f0;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .lecture-card {
+            transition: all 0.3s ease;
         }
-        .apple-details-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        
+        .lecture-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        .apple-button {
-            background: #007aff;
-            border: none;
-            border-radius: 25px;
-            padding: 12px 25px;
-            color: #ffffff;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
-            display: inline-flex;
-            align-items: center;
+        
+        .progress-bar {
+            transition: width 0.3s ease;
         }
-        .apple-button:hover {
-            background: #005bb5;
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 122, 255, 0.4);
-        }
-        .apple-button i {
-            margin-left: 8px;
-        }
-
-        /* Theme Styles - Default (Light Blue) */
-        body.theme-default .apple-neon-text { color: #406D96; }
-        body.theme-default .apple-button { background: #406D96; }
-
     </style>
 </head>
-<body class="bg-gray-100 p-4 theme-default">
-    <div class="container mx-auto apple-card">
-        <h1 class="text-center apple-neon-text">جدول المحاضرات - علوم سياسية - م 1</h1>
-
-        <div class="table-container">
-            <table class="apple-table w-full">
-                <thead>
-                    <tr>
-                        <th>اليوم</th>
-                        <th>التوقيت</th>
-                        <th>اسم المادة</th>
-                        <th>اسم المحاضر</th>
-                    </tr>
-                </thead>
-                <tbody>
-                        <tr onclick="showDetails('Headway Beginners', 'م.م. علي خلف عبدالله')">
-                        <td>الأحد</td>
-                        <td>9:00-9:45</td>
-                        <td>Headway Beginners</td>
-                        <td>م.م. علي خلف عبدالله</td>
-                    </tr>
-                    <tr onclick="showDetails('تاريخ العلاقات الدولية', 'أ.د. عبدالغني محمد عبدالعزيز')">
-                        <td>الأحد</td>
-                        <td>10:00-10:45</td>
-                        <td>تاريخ العلاقات الدولية</td>
-                        <td>أ.د. عبدالغني محمد عبدالعزيز</td>
-                    </tr>
-                    <tr onclick="showDetails('الأنظمة السياسية والدستورية المقارنة', 'أ.د. محمد شطب')">
-                        <td>الأحد</td>
-                        <td>11:00-11:45</td>
-                        <td>الأنظمة السياسية والدستورية المقارنة</td>
-                        <td>أ.د. محمد شطب</td>
-                    </tr>
-                    <tr onclick="showDetails('المدخل لدراسة القانون', 'أ.م. رياض ناظم')">
-                        <td>الأحد</td>
-                        <td>12:00-12:45</td>
-                        <td>المدخل لدراسة القانون</td>
-                        <td>أ.م. رياض ناظم</td>
-                    </tr>
-                    <tr onclick="showDetails('اللغة العربية', 'د. ضياء حامد حمود')">
-                        <td>الاثنين</td>
-                        <td>9:00-9:45</td>
-                        <td>اللغة العربية</td>
-                        <td>د. ضياء حامد حمود</td>
-                    </tr>
-                    <tr onclick="showDetails('حقوق الإنسان', 'م.م. زينب غالب')">
-                        <td>الاثنين</td>
-                        <td>10:00-10:45</td>
-                        <td>حقوق الإنسان</td>
-                        <td>م.م. زينب غالب</td>
-                    </tr>
-                    <tr onclick="showDetails('مدخل علم الاقتصاد', 'م. هاشم راشد عبرش')">
-                        <td>الاثنين</td>
-                        <td>11:00-11:45</td>
-                        <td>مدخل علم الاقتصاد</td>
-                        <td>م. هاشم راشد عبرش</td>
-                    </tr>
-                    <tr onclick="showDetails('Introduction to Political Science', 'م.م. ماجد أحمد')">
-                        <td>الاثنين</td>
-                        <td>12:00-12:45</td>
-                        <td>Introduction to Political Science</td>
-                        <td>م.م. ماجد أحمد</td>
-                    </tr>
-                                       <tr onclick="showDetails('الأنظمة السياسية والدستورية المقارنة', 'أ.د. محمد شطب')">
-                        <td>الثلاثاء</td>
-                        <td>9:00-9:45</td>
-                        <td>الأنظمة السياسية والدستورية المقارنة</td>
-                        <td>أ.د. محمد شطب</td>
-                    </tr>
-                    <tr onclick="showDetails('تاريخ العلاقات الدولية', 'أ.د. عبدالغني محمد عبدالعزيز')">
-                        <td>الثلاثاء</td>
-                        <td>10:00-10:45</td>
-                        <td>تاريخ العلاقات الدولية</td>
-                        <td>أ.د. عبدالغني محمد عبدالعزيز</td>
-                    </tr>
-                    <tr onclick="showDetails('المدخل لدراسة القانون', 'أ.م. رياض ناظم')">
-                        <td>الثلاثاء</td>
-                        <td>11:00-11:45</td>
-                        <td>المدخل لدراسة القانون</td>
-                        <td>أ.م. رياض ناظم</td>
-                    </tr>
-                    <tr onclick="showDetails('المدخل إلى علم السياسة', 'د. عباس فاضل علوان')">
-                        <td>الثلاثاء</td>
-                        <td>12:00-12:45</td>
-                        <td>المدخل إلى علم السياسة</td>
-                        <td>د. عباس فاضل علوان</td>
-                    </tr>
-                    <tr onclick="showDetails('المدخل إلى علم السياسة', 'د. عباس فاضل علوان')">
-                        <td>الأربعاء</td>
-                        <td>9:00-9:45</td>
-                        <td>المدخل إلى علم السياسة</td>
-                        <td>د. عباس فاضل علوان</td>
-                    </tr>
-                    <tr onclick="showDetails('حقوق الإنسان', 'م.م. زينب غالب')">
-                        <td>الأربعاء</td>
-                        <td>10:00-10:45</td>
-                        <td>حقوق الإنسان</td>
-                        <td>م.م. زينب غالب</td>
-                    </tr>
-                    <tr onclick="showDetails('الأنظمة السياسية والدستورية المقارنة', 'أ.د. محمد شطب')">
-                        <td>الأربعاء</td>
-                        <td>11:00-11:45</td>
-                        <td>الأنظمة السياسية والدستورية المقارنة</td>
-                        <td>أ.د. محمد شطب</td>
-                    </tr>
-                    <tr onclick="showDetails('Introduction to Political Science', 'م.م. ماجد أحمد')">
-                        <td>الأربعاء</td>
-                        <td>12:00-12:45</td>
-                        <td>Introduction to Political Science</td>
-                        <td>م.م. ماجد أحمد</td>
-                    </tr>
-                    <tr onclick="showDetails('مدخل علم الاقتصاد', 'م. هاشم راشد عبرش')">
-                        <td>الخميس</td>
-                        <td>9:00-9:45</td>
-                        <td>مدخل علم الاقتصاد</td>
-                        <td>م. هاشم راشد عبرش</td>
-                    </tr>
-                    <tr onclick="showDetails('المدخل إلى علم السياسة', 'د. عباس فاضل علوان')">
-                        <td>الخميس</td>
-                        <td>10:00-10:45</td>
-                        <td>المدخل إلى علم السياسة</td>
-                        <td>د. عباس فاضل علوان</td>
-                    </tr>
-                    <tr onclick="showDetails('أساسيات الحاسوب', 'م.م. ليث رافع')">
-                        <td>الخميس</td>
-                        <td>11:00-11:45</td>
-                        <td>أساسيات الحاسوب</td>
-                        <td>م.م. ليث رافع</td>
-                    </tr>
-                </tbody>
-            </table>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen p-4 md:p-8">
+    <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold mb-2">
+                    <i class="fas fa-graduation-cap ml-2"></i>
+                    جدول المحاضرات - علوم سياسية
+                </h1>
+                <div class="flex items-center justify-center gap-4 text-lg">
+                    <div>
+                        <i class="fas fa-calendar-alt ml-2"></i>
+                        <span id="current-day"></span>
+                    </div>
+                    <div>
+                        <i class="fas fa-clock ml-2"></i>
+                        <span id="current-time"></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div id="details" class="mt-4 p-4 apple-details-container hidden">
-            <h2 class="text-xl font-bold mb-2" id="lecture-title"></h2>
+        <!-- Days Tabs -->
+        <div class="bg-gray-100 p-4">
+            <div class="flex flex-wrap gap-2 justify-center" id="days-tabs">
+                <!-- سيتم إضافة الأيام ديناميكياً -->
+            </div>
         </div>
 
-        <div class="mt-4 text-center">
-            <button class="apple-button" onclick="window.print()">
-                <i class="fas fa-print"></i> طباعة الجدول
-            </button>
+        <!-- Content -->
+        <div class="p-6" id="schedule-content">
+            <!-- سيتم إضافة المحتوى ديناميكياً -->
         </div>
     </div>
 
     <script>
-        function showDetails(lectureTitle, lecturerName) {
-            const detailsDiv = document.getElementById('details');
-            const titleHeader = document.getElementById('lecture-title');
+        const schedule = {
+            'الأحد': [
+                
+                { time: '9:00-9:45', name: 'اللغة العربية', lecturer: 'د.الهام' },
+                { time: '10:00-10:45', name: 'تاريخ العلاقات الدولية', lecturer: 'أ.د. عبدالغني محمد عبدالعزيز' },
+                { time: '11:00-11:45', name: 'الأنظمة السياسية والدستورية المقارنة', lecturer: 'أ.د. محمد شطب' },
+                { time: '12:00-12:45', name: 'المدخل لدراسة القانون', lecturer: 'أ.م. رياض ناظم' }
+            ],
+            'الاثنين': [
+                { time: '9:00-9:45', name: 'Headway Beginners', lecturer: 'م.م. علي خلف عبدالله' },
+                { time: '10:00-10:45', name: 'حقوق الإنسان', lecturer: 'م.م. زينب غالب' },
+                { time: '11:00-11:45', name: 'المدخل لدراسة القانون', lecturer: 'أ.م. رياض ناظم' },
+                { time: '12:00-12:45', name: 'Introduction to Political Science', lecturer: 'م.م. ماجد أحمد' }
+            ],
+            'الثلاثاء': [
+                { time: '9:00-9:45', name: 'الأنظمة السياسية والدستورية المقارنة', lecturer: 'أ.د. محمد شطب' },
+                { time: '10:00-10:45', name: 'تاريخ العلاقات الدولية', lecturer: 'أ.د. عبدالغني محمد عبدالعزيز' },
+                { time: '11:00-11:45', name: 'مدخل علم الاقتصاد', lecturer: 'م. هاشم راشد عجرش' },
+                { time: '12:00-12:45', name: 'المدخل إلى علم السياسة', lecturer: 'د. عباس فاضل علوان' }
+            ],
+            'الأربعاء': [
+                { time: '9:00-9:45', name: 'المدخل إلى علم السياسة', lecturer: 'د. عباس فاضل علوان' },
+                { time: '10:00-10:45', name: 'حقوق الإنسان', lecturer: 'م.م. زينب غالب' },
+                { time: '11:00-11:45', name: 'الأنظمة السياسية والدستورية المقارنة', lecturer: 'أ.د. محمد شطب' },
+                { time: '12:00-12:45', name: 'Introduction to Political Science', lecturer: 'م.م. ماجد أحمد' }
+            ],
+            'الخميس': [
+                { time: '9:00-9:45', name: 'مدخل علم الاقتصاد', lecturer: 'م. هاشم راشد عجرش' },
+                { time: '10:00-10:45', name: 'المدخل إلى علم السياسة', lecturer: 'د. عباس فاضل علوان' },
+                { time: '11:00-11:45', name: 'أساسيات الحاسوب', lecturer: 'م.م. ليث رافع' }
+            ]
+        };
 
-            titleHeader.textContent = lectureTitle;
-            detailsDiv.classList.remove('hidden'); 
+        const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+        let activeDay = getCurrentDay();
+
+        function getCurrentDay() {
+            const daysAr = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            return daysAr[new Date().getDay()];
         }
-    </script>
 
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const date = new Date();
+            date.setHours(hours, minutes, 0);
+            return date;
+        }
+
+        function getLectureStatus(day, timeRange) {
+            const currentDay = getCurrentDay();
+            const [startTime, endTime] = timeRange.split('-');
+            const lectureStart = parseTime(startTime);
+            const lectureEnd = parseTime(endTime);
+            const now = new Date();
+
+            if (day !== currentDay) {
+                return {
+                    status: 'لم يبدأ اليوم',
+                    progress: 0,
+                    remaining: '---',
+                    color: 'bg-gray-200'
+                };
+            }
+
+            if (now >= lectureStart && now <= lectureEnd) {
+                const totalDuration = lectureEnd - lectureStart;
+                const elapsed = now - lectureStart;
+                const progress = Math.min(100, (elapsed / totalDuration) * 100);
+                const remainingMinutes = Math.floor((lectureEnd - now) / 1000 / 60);
+                const remainingHours = Math.floor(remainingMinutes / 60);
+                const mins = remainingMinutes % 60;
+                
+                return {
+                    status: 'جارية الآن',
+                    progress,
+                    remaining: `${remainingHours ? remainingHours + ' ساعة و ' : ''}${mins} دقيقة`,
+                    color: 'bg-green-500'
+                };
+            }
+
+            if (now < lectureStart) {
+                const remainingMinutes = Math.floor((lectureStart - now) / 1000 / 60);
+                const remainingHours = Math.floor(remainingMinutes / 60);
+                const mins = remainingMinutes % 60;
+                
+                return {
+                    status: 'قادمة',
+                    progress: 0,
+                    remaining: `${remainingHours ? remainingHours + ' ساعة و ' : ''}${mins} دقيقة`,
+                    color: 'bg-blue-500'
+                };
+            }
+
+            return {
+                status: 'منتهية',
+                progress: 100,
+                remaining: '---',
+                color: 'bg-gray-400'
+            };
+        }
+
+        function createDayTabs() {
+            const tabsContainer = document.getElementById('days-tabs');
+            days.forEach(day => {
+                const btn = document.createElement('button');
+                btn.className = `px-4 py-2 rounded-lg font-bold transition-all ${day === activeDay ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-blue-50'}`;
+                btn.textContent = day;
+                btn.onclick = () => {
+                    activeDay = day;
+                    updateUI();
+                };
+                tabsContainer.appendChild(btn);
+            });
+        }
+
+        function updateSchedule() {
+            const container = document.getElementById('schedule-content');
+            container.innerHTML = '';
+            
+            if (schedule[activeDay]) {
+                schedule[activeDay].forEach(lecture => {
+                    const status = getLectureStatus(activeDay, lecture.time);
+                    
+                    const lectureCard = document.createElement('div');
+                    lectureCard.className = 'lecture-card bg-white rounded-lg p-4 mb-4 border border-gray-200 hover:border-blue-300';
+                    lectureCard.innerHTML = `
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-book text-blue-500"></i>
+                                <h3 class="font-bold text-gray-800">${lecture.name}</h3>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm ${status.status === 'جارية الآن' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                                ${status.status}
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-3 text-sm text-gray-600">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-clock text-blue-400"></i>
+                                ${lecture.time}
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-user text-blue-400"></i>
+                                ${lecture.lecturer}
+                            </div>
+                        </div>
+
+                        <div class="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="progress-bar absolute top-0 left-0 h-full ${status.color}" style="width: ${status.progress}%"></div>
+                        </div>
+                        
+                        ${status.remaining !== '---' ? `
+                            <div class="mt-2 text-sm text-gray-500 flex items-center gap-1">
+                                <i class="fas fa-hourglass-half"></i>
+                                متبقي: ${status.remaining}
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    container.appendChild(lectureCard);
+                });
+            }
+        }
+
+        function updateDateTime() {
+            document.getElementById('current-day').textContent = getCurrentDay();
+            document.getElementById('current-time').textContent = new Date().toLocaleTimeString('ar-IQ');
+        }
+
+        function updateUI() {
+            // تحديث الأزرار
+            const buttons = document.querySelectorAll('#days-tabs button');
+            buttons.forEach(btn => {
+                btn.className = `px-4 py-2 rounded-lg font-bold transition-all ${btn.textContent === activeDay ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-blue-50'}`;
+            });
+            
+            updateSchedule();
+        }
+
+        // التحديث الأولي
+        createDayTabs();
+        updateDateTime();
+        updateSchedule();
+
+        // تحديث كل ثانية
+        setInterval(() => {
+            updateDateTime();
+            updateSchedule();
+        }, 1000);
+    </script>
 </body>
-</html> 
+</html>
