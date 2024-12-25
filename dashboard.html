@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المدير</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../index.html">الرئيسية</a></li>
+                <li><a href="dashboard.html" class="active">لوحة التحكم</a></li>
+                <li><a href="../login.html">تسجيل الخروج</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard">
+        <h1>لوحة تحكم المدير</h1>
+
+        <section id="manage-donors">
+            <h2>إدارة المتبرعين</h2>
+            <a href="#">عرض قائمة المتبرعين</a> | <a href="#">إضافة متبرع جديد</a>
+        </section>
+
+        <section id="manage-requests">
+            <h2>إدارة طلبات الدم</h2>
+            <a href="#">عرض قائمة الطلبات</a> | <a href="#">طلبات جديدة</a>
+        </section>
+
+        <section id="manage-inventory">
+            <h2>إدارة المخزون</h2>
+            <a href="#">عرض المخزون</a> | <a href="#">إضافة وحدة دم</a>
+        </section>
+
+        <section id="manage-users">
+            <h2>إدارة المستخدمين</h2>
+            <a href="#">عرض المستخدمين</a> | <a href="#">إضافة مستخدم جديد</a>
+        </section>
+
+        <section id="audit-log">
+            <h2>سجل العمليات</h2>
+            <a href="#">عرض سجل العمليات</a>
+        </section>
+
+        <section id="settings">
+            <h2>إعدادات الموقع</h2>
+            <a href="#">تعديل الإعدادات</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2023 بنك الدم. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/database-manager.js"></script>
+    <script src="../js/form-handlers.js"></script>
+</body>
+</html>
