@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبرع بالدم - بنك الدم</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donate.html" class="active">تبرع بالدم</a></li>
+                <li><a href="request.html">أطلب دم</a></li>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="donate-container">
+            <h1>كن بطلاً، تبرع بالدم</h1>
+            <p>تبرعك بالدم هو عمل إنساني نبيل يمكن أن ينقذ حياة شخص آخر...</p>
+
+            <div class="steps">
+                <div class="step">
+                    <h3>1. كن مؤهلاً</h3>
+                    <p>تأكد من أنك تستوفي شروط التبرع الأساسية.</p>
+                </div>
+                <div class="step">
+                    <h3>2. سجل الآن</h3>
+                    <p>املأ النموذج البسيط لتصبح متبرعًا.</p>
+                </div>
+                <div class="step">
+                    <h3>3. حدد موعدًا</h3>
+                    <p>اختر الوقت والمكان المناسبين لك للتبرع.</p>
+                </div>
+                <div class="step">
+                    <h3>4. أنقذ حياة</h3>
+                    <p>تبرع بدمك وكن سببًا في إنقاذ حياة.</p>
+                </div>
+            </div>
+
+            <section class="eligibility">
+                <h2>من يمكنه التبرع بالدم؟</h2>
+                <ul>
+                    <li>أن يكون عمر المتبرع بين 18 و 65 عامًا.</li>
+                    <li>أن يكون الوزن أكثر من 50 كجم.</li>
+                    <li>أن لا يكون المتبرع مصابًا بأي أمراض معدية.</li>
+                </ul>
+            </section>
+
+            <section class="registration-form">
+                <h2>سجل كمتبرع جديد</h2>
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="name">الاسم الكامل:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف:</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني:</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="blood_type">فصيلة الدم (اختياري):</label>
+                        <select id="blood_type" name="blood_type">
+                            <option value="">غير معروف</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <button type="submit">سجل الآن كمتبرع</button>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2023 بنك الدم. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/database-manager.js"></script>
+    <script src="js/form-handlers.js"></script>
+</body>
+</html>

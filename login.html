@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - بنك الدم</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donate.html">تبرع بالدم</a></li>
+                <li><a href="request.html">أطلب دم</a></li>
+                <li><a href="login.html" class="active">تسجيل الدخول</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="login-container">
+            <h1>تسجيل الدخول</h1>
+            <p class="description">الرجاء إدخال بيانات الاعتماد الخاصة بك للدخول إلى النظام</p>
+
+            <form id="loginForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="username">اسم المستخدم:</label>
+                    <input type="text" id="username" name="username" required placeholder="أدخل اسم المستخدم">
+                    <span class="error-text" id="username-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="password">كلمة المرور:</label>
+                    <input type="password" id="password" name="password" required placeholder="أدخل كلمة المرور">
+                    <span class="error-text" id="password-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="role">الدخول كـ:</label>
+                    <select id="role" name="role" required>
+                        <option value="">اختر نوع المستخدم</option>
+                        <option value="admin">مدير النظام</option>
+                        <option value="staff_donation">موظف استلام التبرعات</option>
+                        <option value="staff_distribution">موظف توزيع الدم</option>
+                    </select>
+                    <span class="error-text" id="role-error"></span>
+                </div>
+                <button type="submit" id="loginButton">تسجيل الدخول</button>
+                <div class="loading-spinner" id="loadingSpinner"></div>
+                <div id="errorMessage" class="error-message"></div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2023 بنك الدم. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="js/user-auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const roleSelect = document.getElementById('role');
+            const loginButton = document.getElementById('loginButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const errorMessage = document.getElementById('errorMessage');
+
+            loginForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                // التحقق من الحقول
+                let hasError = false;
+                if (!usernameInput.value.trim()) {
+                    document.getElementById('username-error').textContent = 'يرجى إدخال اسم المستخدم';
+                    hasError = true;
+                }
+                if (!passwordInput.value) {
+                    document.getElementById('password-error').textContent = 'يرجى إدخال كلمة المرور';
+                    hasError = true;
+                }
+                if (!roleSelect.value) {
+                    document.getElementById('role-error').textContent = 'يرجى اختيار نوع المستخدم';
+                    hasError = true;
+                }
+
+                if (hasError) return;
+
+                // إظهار حالة التحميل
+                loginButton.disabled = true;
+                loadingSpinner.style.display = 'block';
+                errorMessage.style.display = 'none';
+
+                try {
+                    const result = await userAuth.login(
+                        usernameInput.value.trim(),
+                        passwordInput.value,
+                        roleSelect.value
+                    );
+
+                    if (result.success) {
+                        // التوجيه حسب نوع المستخدم
+                        switch(roleSelect.value) {
+                            case 'admin':
+                                window.location.href = 'admin/dashboard.html';
+                                break;
+                            case 'staff_donation':
+                                window.location.href = 'admin/donation.html';
+                                break;
+                            case 'staff_distribution':
+                                window.location.href = 'admin/distribution.html';
+                                break;
+                        }
+                    }
+                } catch (error) {
+                    // عرض رسالة الخطأ
+                    errorMessage.textContent = error.message;
+                    errorMessage.style.display = 'block';
+                    // مسح كلمة المرور
+                    passwordInput.value = '';
+                } finally {
+                    // إعادة تفعيل الزر وإخفاء التحميل
+                    loginButton.disabled = false;
+                    loadingSpinner.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

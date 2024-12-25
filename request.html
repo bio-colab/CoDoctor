@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب دم - بنك الدم</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donate.html">تبرع بالدم</a></li>
+                <li><a href="request.html" class="active">أطلب دم</a></li>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="request-container">
+            <h1>طلب وحدة دم</h1>
+            <p>يرجى ملء النموذج التالي لتقديم طلب دم. سيتم التواصل معك في أقرب وقت ممكن.</p>
+
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="patient_name">اسم المريض:</label>
+                    <input type="text" id="patient_name" name="patient_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="patient_phone">رقم هاتف المريض:</label>
+                    <input type="tel" id="patient_phone" name="patient_phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="blood_type_needed">فصيلة الدم المطلوبة:</label>
+                    <select id="blood_type_needed" name="blood_type_needed" required>
+                        <option value="">اختر فصيلة الدم</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                <button type="submit">إرسال طلب الدم</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2023 بنك الدم. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/database-manager.js"></script>
+    <script src="js/form-handlers.js"></script>
+</body>
+</html>
