@@ -1,75 +1,115 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بنك الدم</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الياس - مبرمج ومطور برمجيات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    /* إعدادات عامة */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 90%;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .container:hover {
+      transform: scale(1.05);
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid white;
+      margin-bottom: 15px;
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #f1c40f;
+    }
+
+    p {
+      font-size: 1.3rem;
+      margin: 10px 0;
+    }
+
+    .contact-info {
+      margin-top: 20px;
+    }
+
+    .contact-info a {
+      display: inline-block;
+      color: #f39c12;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: 2px solid #f39c12;
+      border-radius: 25px;
+      transition: all 0.3s ease-in-out;
+      margin: 5px;
+    }
+
+    .contact-info a:hover {
+      background: #f39c12;
+      color: white;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+
+  </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="active">الرئيسية</a></li>
-                <li><a href="donate.html">تبرع بالدم</a></li>
-                <li><a href="request.html">أطلب دم</a></li>
-                <li><a href="login.html">تسجيل الدخول</a></li>
-            </ul>
-        </nav>
-    </header>
+  <div class="container">
+    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="الياس" class="avatar">
+    <h1>الياس</h1>
+    <p>مبرمج ومطور برمجيات</p>
+    <p>أقيم في تكريت، صلاح الدين</p>
+    
+    <div class="contact-info">
+      <a href="mailto:aliasbio95@gmail.com">📧 البريد الإلكتروني</a>
+      <a href="tel:07759966991">📞 الهاتف</a>
+    </div>
 
-    <main>
-        <section id="introduction">
-            <h2>مرحباً بكم في بنك الدم</h2>
-            <p>نعمل معاً لإنقاذ الأرواح من خلال التبرع بالدم.</p>
-        </section>
-
-        <section id="statistics">
-            <h2>إحصائيات حيوية</h2>
-            <div class="stats-container">
-                <div>
-                    <span>المتبرعين</span>
-                    <p id="donor-count">150+</p>
-                </div>
-                <div>
-                    <span>وحدات الدم المتوفرة</span>
-                    <p id="blood-units">300+</p>
-                </div>
-                <div>
-                    <span>طلبات الدم المستلمة</span>
-                    <p id="requests-count">50+</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="call-to-action">
-            <h2>ساهم في إنقاذ حياة</h2>
-            <div class="cta-buttons">
-                <a href="donate.html" class="button">تبرع بالدم الآن</a>
-                <a href="request.html" class="button">أطلب دم</a>
-            </div>
-        </section>
-
-        <section id="login-section">
-            <h2>تسجيل الدخول</h2>
-            <p>للموظفين والمدراء.</p>
-            <a href="login.html" class="button">تسجيل الدخول</a>
-        </section>
-
-        <section id="contact-info">
-            <h2>معلومات الاتصال</h2>
-            <p>العنوان: ...</p>
-            <p>الهاتف: ...</p>
-            <p>البريد الإلكتروني: ...</p>
-        </section>
-    </main>
-
-    <footer>
-        <p>© 2023 بنك الدم. جميع الحقوق محفوظة.</p>
-    </footer>
-
-    <script src="js/script.js"></script>
-    <script src="js/database-manager.js"></script>
-    <script src="js/form-handlers.js"></script>
+    <div class="footer">
+      <p>© 2025 جميع الحقوق محفوظة</p>
+    </div>
+  </div>
 </body>
 </html>
